@@ -275,7 +275,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-15 14:17:22" itemprop="dateModified" datetime="2020-04-15T14:17:22+08:00">2020-04-15</time>
+                <time title="修改时间：2020-04-15 14:19:59" itemprop="dateModified" datetime="2020-04-15T14:19:59+08:00">2020-04-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -313,7 +313,7 @@
 <p><img src="/images/%E5%83%8F%E7%B4%A0%E9%97%AE%E9%A2%98/1.png" alt=""></p>
 <p>做为用户是不会关心这些细节的，他们只是希望在不同PPI的设备上看到的图像内容差不多大小，所以这时我们需要一个新的单位，这个新的单位能够保证图像内容在不同的PPI设备看上去大小应该差不多，这就是独立像素，在IOS设备上叫PT(Point)，Android设备上叫DIP(Device independent Pixel)或DP。</p>
 <p>举例说明就是iPhone 3G（PPI为163）1dp = 1px，iPhone 4（PPI为326）1dp = 2px。</p>
-<p><img src="file:///C:%5CUsers%5CSIMONB~1%5CAppData%5CLocal%5CTemp%5Cksohtml10232%5Cwps2.jpg" alt="img"> </p>
+<p><img src="/images/%E5%83%8F%E7%B4%A0%E9%97%AE%E9%A2%98/2.png" alt=""> </p>
 <p>我们也不难发现，如果想要iPhone 3G/S和iPhone 4/S图像内容显示一致，可以把iPhone 4/S的尺寸放大一倍（它们是一个2倍(@2x)的关系），即在iPhone3G/S的上尺寸为44<em>44px，在iPhone4/S上为88</em>88px，我们要想实现这样的结果可以设置44<em>44dp，这时在iPhone3G/S上代表44</em>44px，在iPhone4/S上代表88*88px，最终用可以看到的图像差不多大小。</p>
 <p>通过上面例子我们不难发现dp同px是有一个对应（比例）关系的，这个对应（比例）关系是操作系统确定并处理，目的是确保不同PPI屏幕所能显示的图像大小是一致的，通过<font color="red">window.devicePixelRatio</font>可以获得该比例值。</p>
 <p>一般: <font color="red">PC 1pt =1px</font></p>
