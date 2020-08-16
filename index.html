@@ -184,7 +184,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-08-16 11:18:17 / 修改时间：15:26:40" itemprop="dateCreated datePublished" datetime="2020-08-16T11:18:17+08:00">2020-08-16</time>
+              <time title="创建时间：2020-08-16 11:18:17 / 修改时间：15:36:20" itemprop="dateCreated datePublished" datetime="2020-08-16T11:18:17+08:00">2020-08-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,7 +224,7 @@
 <h3 id="测试代码实现部分"><a href="#测试代码实现部分" class="headerlink" title="测试代码实现部分"></a>测试代码实现部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用自定义函数处理异步任务</span></span><br><span class="line">	 <span class="keyword">var</span> p1 = <span class="keyword">new</span> myPromise(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!<span class="literal">true</span>)&#123;</span><br><span class="line">                    resolve(<span class="string">"自定以的promise成功"</span>)</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    reject(<span class="string">'自定以的promise失败'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,<span class="number">1000</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">     	<span class="comment">//注册成功处理函数</span></span><br><span class="line">        p1.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;) </span><br><span class="line">		<span class="comment">//注册失败处理函数</span></span><br><span class="line">        p1.catch(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
 
 <p>代码结果如下:</p>
-<p>​    <img src="/2020/08/16/promise%E5%AE%9E%E7%8E%B0/promise%E5%AE%9E%E7%8E%B0%5C1.png" alt></p>
+<p>​    <img src="/2020/08/16/promise%E5%AE%9E%E7%8E%B0/1.png" alt></p>
 
       
     </div>
