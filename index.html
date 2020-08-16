@@ -224,7 +224,7 @@
 <h3 id="测试代码实现部分"><a href="#测试代码实现部分" class="headerlink" title="测试代码实现部分"></a>测试代码实现部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用自定义函数处理异步任务</span></span><br><span class="line">	 <span class="keyword">var</span> p1 = <span class="keyword">new</span> myPromise(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!<span class="literal">true</span>)&#123;</span><br><span class="line">                    resolve(<span class="string">"自定以的promise成功"</span>)</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    reject(<span class="string">'自定以的promise失败'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,<span class="number">1000</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">     	<span class="comment">//注册成功处理函数</span></span><br><span class="line">        p1.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;) </span><br><span class="line">		<span class="comment">//注册失败处理函数</span></span><br><span class="line">        p1.catch(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
 
 <p>代码结果如下:</p>
-<p>​    <img src="promise%E5%AE%9E%E7%8E%B0%5C1.png" alt=""></p>
+<p>​    <img src="/2020/08/16/promise%E5%AE%9E%E7%8E%B0/promise%E5%AE%9E%E7%8E%B0%5C1.png" alt></p>
 
       
     </div>
@@ -485,13 +485,13 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=<span class="string">"width: 100px;height: 100px;background-color: green;margin-bottom: 200px;"</span>&gt;a&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;div style="width: 100px;height: 100px; background-color: black;margin-top: 100px;"&gt;b&lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>​    <strong>效果图:</strong></p>
-<p><img src="/images/css/1.png" alt=""></p>
+<p><img src="/images/css/1.png" alt></p>
 <p>​    2.margin-top塌陷问题</p>
 <p>​        margin-top使得父元素产量了同等的margin-top的值，如下:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=<span class="string">"width: 100px;height: 100px;background-color: green;margin-bottom: 200px;"</span>&gt;</span><br><span class="line">        &lt;div style=<span class="string">"width: 50px;height: 50px; background-color: black;margin-top: 30px;"</span>&gt;b&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>效果图如下:</p>
-<p>​    <img src="/images/css/2.png" alt=""></p>
+<p>​    <img src="/images/css/2.png" alt></p>
 <p><font style="color:#ff0000">解决方法</font></p>
 <p>1、在父层div加上：overflow:hidden；</p>
 <p>2、把margin-top外边距改成padding-top内边距 ；</p>
@@ -501,7 +501,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">        &lt;div style=<span class="string">"width: 100px;height: 100px; float: left; background: #000;"</span>&gt;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>效果图:</p>
-<p>​    <img src="/images/css/3.png" alt=""></p>
+<p>​    <img src="/images/css/3.png" alt></p>
 <p><font style="color:#ff0000">解决方法</font></p>
 <p>​    1.使用 clear,来清除浮动，可以给父元素加上after或者before的伪类，并给伪类加上clear属性</p>
 <p>​    2.使用 overflow: hidden来清除浮动，直接在父元素上面使用</p>
@@ -514,7 +514,7 @@
 
 
 <p>效果图:</p>
-<p>​    <img src="/images/css/4.png" alt=""></p>
+<p>​    <img src="/images/css/4.png" alt></p>
 <p>解析:以基线对齐，基线类似于拼音本上面的4条线</p>
 <p><strong>解决方法:</strong></p>
 <p>​    使用 vertical-align属性进行消除</p>
@@ -596,7 +596,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="一：移动端的viewport"><a href="#一：移动端的viewport" class="headerlink" title="一：移动端的viewport"></a>一：移动端的viewport</h2><h3 id="什么是视口"><a href="#什么是视口" class="headerlink" title="什么是视口"></a>什么是视口</h3><p>​    视口（viewport）<font color="red">是用来约束网站中最顶级块元素**<html>的，即它决定了<html>的大小</font>。</p>
+          <h2 id="一：移动端的viewport"><a href="#一：移动端的viewport" class="headerlink" title="一：移动端的viewport"></a>一：移动端的viewport</h2><h3 id="什么是视口"><a href="#什么是视口" class="headerlink" title="什么是视口"></a>什么是视口</h3><p>​    视口（viewport）<font color="red">是用来约束网站中最顶级块元素**<html>的，即它决定了<html>的大小</html></html></font>。</p>
 <h3 id="1-PC设备"><a href="#1-PC设备" class="headerlink" title="1.PC设备"></a>1.PC设备</h3><p>​    在PC设备上viewport的大小取决于<font color="red">浏览器窗口的大小</font>，以CSS像素做为度量单位。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过js获取viewport的大小</span></span><br><span class="line">	<span class="built_in">document</span>.documentElement.clientWidth</span><br><span class="line">	<span class="built_in">document</span>.documentElement.clientHeight</span><br></pre></td></tr></table></figure>
 
@@ -803,15 +803,15 @@
       
           <h1 id="像素问题"><a href="#像素问题" class="headerlink" title="像素问题"></a>像素问题</h1><h3 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h3><h5 id="屏幕尺寸-对角线宽度"><a href="#屏幕尺寸-对角线宽度" class="headerlink" title="屏幕尺寸: 对角线宽度"></a>屏幕尺寸: 对角线宽度</h5><h5 id="屏幕分辨率"><a href="#屏幕分辨率" class="headerlink" title="屏幕分辨率:"></a>屏幕分辨率:</h5><p>​    而分辨率则一般用像素来度量 px，表示屏幕水平和垂直方向的像素数，例如1920*1080指的是屏幕垂直方向和水平方向分别有1920和1080个像素点而构成.</p>
 <h3 id="长度单位"><a href="#长度单位" class="headerlink" title="长度单位:"></a>长度单位:</h3><p>​    在Web开发中可以使用px（像素）、em、pt（点）、in（英寸）、cm（厘米）做为长度单位，我们最常用px（像素）做为长度单位。</p>
-<p><font color="#FF0000" size = "4">相对长度</font>: px em pt  rem</p>
-<p><font color="#FF0000" size="4">绝对长度</font>:</u> in cm</p>
+<p><font color="#FF0000" size="4">相对长度</font>: px em pt  rem</p>
+<p><font color="#FF0000" size="4">绝对长度</font>: in cm</p>
 <h3 id="像素宽度"><a href="#像素宽度" class="headerlink" title="像素宽度:"></a>像素宽度:</h3><p>​    DPI ,PPI是像素密度，</p>
 <p><font color="#ff000">PPI值的越大</font>说明单位尺寸里所能容纳的像素数量就越多，即<font color="#ff0000">像素宽度越小</font>，所能展现画面的品质也/就越精细，反之就越粗糙。</p>
 <h3 id="设备独立像素"><a href="#设备独立像素" class="headerlink" title="设备独立像素"></a>设备独立像素</h3><p>​    由于不同的ppi的屏幕共存状态，像素不再是统一的度量单位，</p>
 <p>​    如下图，假设你设计了一个163X163的蓝色方块，在PPI为163的屏幕上，那这个方块看起来正好就是1X1寸大小，在PPI为326的屏幕上，这个方块看起来就只有0.5X0.5寸大小了。</p>
 <p>做为用户是不会关心这些细节的，他们只是希望在不同PPI的设备上看到的图像内容差不多大小，所以这时我们需要一个新的单位，这个新的单位能够保证图像内容在不同的PPI设备看上去大小应该差不多，这就是独立像素，在IOS设备上叫PT(Point)，Android设备上叫DIP(Device independent Pixel)或DP。</p>
 <p>举例说明就是iPhone 3G（PPI为163）1dp = 1px，iPhone 4（PPI为326）1dp = 2px。</p>
-<p><img src="/images/%E5%83%8F%E7%B4%A0%E9%97%AE%E9%A2%98/2.jpg" alt=""> </p>
+<p><img src="/images/%E5%83%8F%E7%B4%A0%E9%97%AE%E9%A2%98/2.jpg" alt> </p>
 <p>我们也不难发现，如果想要iPhone 3G/S和iPhone 4/S图像内容显示一致，可以把iPhone 4/S的尺寸放大一倍（它们是一个2倍(@2x)的关系），即在iPhone3G/S的上尺寸为44<em>44px，在iPhone4/S上为88</em>88px，我们要想实现这样的结果可以设置44<em>44dp，这时在iPhone3G/S上代表44</em>44px，在iPhone4/S上代表88*88px，最终用可以看到的图像差不多大小。</p>
 <p>通过上面例子我们不难发现dp同px是有一个对应（比例）关系的，这个对应（比例）关系是操作系统确定并处理，目的是确保不同PPI屏幕所能显示的图像大小是一致的，通过<font color="red">window.devicePixelRatio</font>可以获得该比例值。</p>
 <p>一般: <font color="red">PC 1pt =1px</font></p>

@@ -232,13 +232,13 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=<span class="string">"width: 100px;height: 100px;background-color: green;margin-bottom: 200px;"</span>&gt;a&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;div style="width: 100px;height: 100px; background-color: black;margin-top: 100px;"&gt;b&lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>​    <strong>效果图:</strong></p>
-<p><img src="/images/css/1.png" alt=""></p>
+<p><img src="/images/css/1.png" alt></p>
 <p>​    2.margin-top塌陷问题</p>
 <p>​        margin-top使得父元素产量了同等的margin-top的值，如下:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=<span class="string">"width: 100px;height: 100px;background-color: green;margin-bottom: 200px;"</span>&gt;</span><br><span class="line">        &lt;div style=<span class="string">"width: 50px;height: 50px; background-color: black;margin-top: 30px;"</span>&gt;b&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>效果图如下:</p>
-<p>​    <img src="/images/css/2.png" alt=""></p>
+<p>​    <img src="/images/css/2.png" alt></p>
 <p><font style="color:#ff0000">解决方法</font></p>
 <p>1、在父层div加上：overflow:hidden；</p>
 <p>2、把margin-top外边距改成padding-top内边距 ；</p>
@@ -248,7 +248,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">        &lt;div style=<span class="string">"width: 100px;height: 100px; float: left; background: #000;"</span>&gt;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>效果图:</p>
-<p>​    <img src="/images/css/3.png" alt=""></p>
+<p>​    <img src="/images/css/3.png" alt></p>
 <p><font style="color:#ff0000">解决方法</font></p>
 <p>​    1.使用 clear,来清除浮动，可以给父元素加上after或者before的伪类，并给伪类加上clear属性</p>
 <p>​    2.使用 overflow: hidden来清除浮动，直接在父元素上面使用</p>
@@ -261,7 +261,7 @@
 
 
 <p>效果图:</p>
-<p>​    <img src="/images/css/4.png" alt=""></p>
+<p>​    <img src="/images/css/4.png" alt></p>
 <p>解析:以基线对齐，基线类似于拼音本上面的4条线</p>
 <p><strong>解决方法:</strong></p>
 <p>​    使用 vertical-align属性进行消除</p>
