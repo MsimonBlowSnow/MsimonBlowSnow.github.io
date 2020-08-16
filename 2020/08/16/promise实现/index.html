@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"msimonblowsnow.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="promise实现1.实现的基本思路:​    1.定义一个class,类里面有两个队列,一个保存成功的响应队列函数,一个保存失败队列的函数，并将status初始化为pedding状态 ​    2.在类中定义两个方法一个是 resolve,和reject两个方法，这两个方法修改状态，并将遍历成功或者是失败的相关函数（这里的函数由我外部的 promise.then,或者promise.catch传">
+<meta property="og:type" content="article">
+<meta property="og:title" content="promise实现">
+<meta property="og:url" content="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="福贵儿的web笔记心得">
+<meta property="og:description" content="promise实现1.实现的基本思路:​    1.定义一个class,类里面有两个队列,一个保存成功的响应队列函数,一个保存失败队列的函数，并将status初始化为pedding状态 ​    2.在类中定义两个方法一个是 resolve,和reject两个方法，这两个方法修改状态，并将遍历成功或者是失败的相关函数（这里的函数由我外部的 promise.then,或者promise.catch传">
+<meta property="og:image" content="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/promise%E5%AE%9E%E7%8E%B0%5C1.png">
+<meta property="article:published_time" content="2020-08-16T03:18:17.000Z">
+<meta property="article:modified_time" content="2020-08-16T07:26:40.494Z">
+<meta property="article:author" content="朱福贵">
+<meta property="article:tag" content="promise实现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/promise%E5%AE%9E%E7%8E%B0%5C1.png">
+
+<link rel="canonical" href="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>promise实现 | 福贵儿的web笔记心得</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">福贵儿的web笔记心得</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/apple.png">
+      <meta itemprop="name" content="朱福贵">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="福贵儿的web笔记心得">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          promise实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-16 11:18:17 / 修改时间：15:26:40" itemprop="dateCreated datePublished" datetime="2020-08-16T11:18:17+08:00">2020-08-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="promise实现"><a href="#promise实现" class="headerlink" title="promise实现"></a>promise实现</h2><h3 id="1-实现的基本思路"><a href="#1-实现的基本思路" class="headerlink" title="1.实现的基本思路:"></a>1.实现的基本思路:</h3><p>​    1.定义一个class,类里面有两个队列,一个保存成功的响应队列函数,一个保存失败队列的函数，并将status初始化为pedding状态</p>
+<p>​    2.在类中定义两个方法一个是 resolve,和reject两个方法，这两个方法修改状态，并将遍历成功或者是失败的相关函数（这里的函数由我外部的 promise.then,或者promise.catch传入 ）</p>
+<p>​    3.在构造函数里面直接执行创建promise的回调函数，并将2 中定义好的resolve，和reject两个方法当作参数传递进去并且绑定this对象为promise对象 。</p>
+<h3 id="2-自定义promise的执行过程"><a href="#2-自定义promise的执行过程" class="headerlink" title="2.自定义promise的执行过程"></a>2.自定义promise的执行过程</h3><p>​    1.一开始执行创建promise对象，并执行创建promise对象传入的函数(由于是异步的 执行不玩马上完成 )，</p>
+<p>​    2.在传入的函数还没有执行的时候（异步后执行 ），将then或者是catch传递的处理函数保存到成功或者是失败的队列中。</p>
+<p>​    3.正常的代码执行完成执行异步代码(即1中提到的promise里面执行的异步步骤)，</p>
+<p>​        成功调用 resolve方法，修改promise的状态（pedding=&gt;resolved,）遍历便且执行成功的回调函数队列</p>
+<p>​        失败调用reject 方法，修改promise的状态（pedding=&gt;reject）遍历并且执行失败的回调函数队列</p>
+<h3 id="3-代码-实现部分"><a href="#3-代码-实现部分" class="headerlink" title="3 代码 实现部分"></a>3 代码 实现部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现代码如下</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myPromise</span> </span>&#123;</span><br><span class="line">           <span class="keyword">constructor</span>(fn)&#123;</span><br><span class="line">               <span class="keyword">this</span>.successList = []; <span class="comment">//保存成功函数队列</span></span><br><span class="line">               <span class="keyword">this</span>.failList = []; <span class="comment">//保存失败函数队列    </span></span><br><span class="line">               <span class="keyword">this</span>.status = <span class="string">"pending"</span>; <span class="comment">//初始化status的状态</span></span><br><span class="line">               <span class="comment">//执行注册函数</span></span><br><span class="line">               fn(<span class="keyword">this</span>.resolveFn.bind(<span class="keyword">this</span>),<span class="keyword">this</span>.rejectFn.bind(<span class="keyword">this</span>));       </span><br><span class="line">           &#125;</span><br><span class="line">    		<span class="comment">//提供一个接口，给外面调用then方法注册成功处理函数和失败处理函数</span></span><br><span class="line">           then(successFn,failFn)&#123;</span><br><span class="line">               <span class="keyword">this</span>.status = <span class="string">"rejected"</span>;</span><br><span class="line">               <span class="keyword">if</span>(<span class="keyword">typeof</span> successFn ==<span class="string">'function'</span>)&#123;</span><br><span class="line">                   <span class="keyword">this</span>.successList.push(successFn);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">if</span>(<span class="keyword">typeof</span> failFn ==<span class="string">'function'</span>)&#123;</span><br><span class="line">                   <span class="keyword">this</span>.failList.push(successFn)</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">   		 <span class="comment">//提供一个接口，给外面调用catch方法注册失败处理函数</span></span><br><span class="line">           <span class="keyword">catch</span>(failFn)&#123;</span><br><span class="line">               <span class="keyword">if</span>(<span class="keyword">typeof</span> failFn ==<span class="string">'function'</span>)&#123;</span><br><span class="line">                   <span class="keyword">this</span>.failList.push(failFn);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">    		<span class="comment">//遍历成功处理函数队列并执行</span></span><br><span class="line">           resolveFn(res)&#123;</span><br><span class="line">               <span class="keyword">this</span>.status = <span class="string">"resolved"</span></span><br><span class="line">               <span class="keyword">this</span>.successList.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item,index</span>)</span>&#123;</span><br><span class="line">                   <span class="comment">//将成功的时间循环调用</span></span><br><span class="line">                   item(res);</span><br><span class="line">               &#125;)</span><br><span class="line">           &#125;</span><br><span class="line">    		<span class="comment">//遍历失败处理函数队列并执行</span></span><br><span class="line">           rejectFn(res)&#123;</span><br><span class="line">			<span class="keyword">this</span>.status = <span class="string">"rejected"</span>;</span><br><span class="line">			<span class="keyword">this</span>.failList.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item,index</span>)</span>&#123;</span><br><span class="line">				item(res);</span><br><span class="line">			&#125;)</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试代码实现部分"><a href="#测试代码实现部分" class="headerlink" title="测试代码实现部分"></a>测试代码实现部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用自定义函数处理异步任务</span></span><br><span class="line">	 <span class="keyword">var</span> p1 = <span class="keyword">new</span> myPromise(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!<span class="literal">true</span>)&#123;</span><br><span class="line">                    resolve(<span class="string">"自定以的promise成功"</span>)</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    reject(<span class="string">'自定以的promise失败'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,<span class="number">1000</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">     	<span class="comment">//注册成功处理函数</span></span><br><span class="line">        p1.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;) </span><br><span class="line">		<span class="comment">//注册失败处理函数</span></span><br><span class="line">        p1.catch(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>代码结果如下:</p>
+<p>​    <img src="promise%E5%AE%9E%E7%8E%B0%5C1.png" alt=""></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/promise%E5%AE%9E%E7%8E%B0/" rel="tag"># promise实现</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/03/git%E4%BD%BF%E7%94%A8/" rel="prev" title="git使用">
+      <i class="fa fa-chevron-left"></i> git使用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#promise实现"><span class="nav-number">1.</span> <span class="nav-text">promise实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实现的基本思路"><span class="nav-number">1.1.</span> <span class="nav-text">1.实现的基本思路:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-自定义promise的执行过程"><span class="nav-number">1.2.</span> <span class="nav-text">2.自定义promise的执行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-代码-实现部分"><span class="nav-number">1.3.</span> <span class="nav-text">3 代码 实现部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码实现部分"><span class="nav-number">1.4.</span> <span class="nav-text">测试代码实现部分</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱福贵"
+      src="/images/apple.png">
+  <p class="site-author-name" itemprop="name">朱福贵</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/MsimonBlowSnow" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MsimonBlowSnow" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱福贵</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
