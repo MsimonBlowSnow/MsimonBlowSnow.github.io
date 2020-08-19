@@ -159,6 +159,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://msimonblowsnow.github.io/2020/08/17/js%E5%8C%85%E8%A3%85%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/apple.png">
+      <meta itemprop="name" content="朱福贵">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="福贵儿的web笔记心得">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/17/js%E5%8C%85%E8%A3%85%E7%B1%BB/" class="post-title-link" itemprop="url">js包装类</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-17 09:29:14 / 修改时间：10:22:25" itemprop="dateCreated datePublished" datetime="2020-08-17T09:29:14+08:00">2020-08-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="基本包装类"><a href="#基本包装类" class="headerlink" title="基本包装类"></a>基本包装类</h2><p>1.基本包装类的类型 String，boolean，Number,</p>
+<p>​    例如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">"ming"</span>;</span><br><span class="line">ming.substring(<span class="number">2</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	为什么基本数据类型能调用函数</span></span><br><span class="line"><span class="comment">		由于ECMAScript 提供了三个包装类 String Boolean Number</span></span><br><span class="line"><span class="comment">		其实上面第二部的代码等同于</span></span><br><span class="line"><span class="comment">			let str = new String(str);//此时str是一个对象</span></span><br><span class="line"><span class="comment">			 //typeof str === “object”；// true</span></span><br><span class="line"><span class="comment">			str。XXX //使用str即(包装类对象来到用该方法)；</span></span><br><span class="line"><span class="comment">			执行完成后就离开变回基本类型</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">//即,当基本类型调用方法时，会先创建一个隐式的包装类对象，调用完成后，就立刻变为基本类型</span></span><br></pre></td></tr></table></figure>
+
+<p>2.创建基本类型对象于创建对象时候使用类来创建的区别,</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="string">"ming"</span>; <span class="comment">//a为基本类型的变量，保存在栈中</span></span><br><span class="line"><span class="keyword">let</span> c = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"ming"</span>); <span class="comment">//c 为对象类型的变量，保存在堆中</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typeof</span> a == <span class="string">"string"</span> <span class="comment">//true;</span></span><br><span class="line"><span class="keyword">typeof</span> c == <span class="string">"object"</span> <span class="comment">//true;</span></span><br><span class="line"></span><br><span class="line">a.name = <span class="string">"ming"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a.name); <span class="comment">//null 一开始创建一个包装类对象将a.ming= ming，不过很快就解包装，变味了基本类型，当再次调用 a.name时，再次包装成对象，不过已经和原来的不是一个对象了，所以 a.name = null;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Number-类型"><a href="#Number-类型" class="headerlink" title="Number 类型"></a>Number 类型</h2><p>1.常用的方法</p>
+<p>​    1.toString()可以传入一个数字表示转化为多少进制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num = <span class="number">10</span></span><br><span class="line">num.toString();</span><br><span class="line">num.toString(<span class="number">2</span>); <span class="comment">//"1010"</span></span><br><span class="line">num.tostring(<span class="number">8</span>); <span class="comment">//"12"</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -182,10 +266,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-08-16 11:18:17 / 修改时间：15:36:20" itemprop="dateCreated datePublished" datetime="2020-08-16T11:18:17+08:00">2020-08-16</time>
+              <time title="创建时间：2020-08-16 11:18:17" itemprop="dateCreated datePublished" datetime="2020-08-16T11:18:17+08:00">2020-08-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-19 19:47:13" itemprop="dateModified" datetime="2020-08-19T19:47:13+08:00">2020-08-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -225,6 +315,12 @@
 
 <p>代码结果如下:</p>
 <p>​    <img src="/2020/08/16/promise%E5%AE%9E%E7%8E%B0/1.png" alt></p>
+<h2 id="promise-与setTimeout"><a href="#promise-与setTimeout" class="headerlink" title="promise 与setTimeout"></a>promise 与setTimeout</h2><p><font style="color: red">宏任务</font>： script(整体代码)，setTimeout, setInterval,setImmediate,I/O,UI rendering</p>
+<p><font style="color: red">微任务</font>：promise(异步代码),Object.observe,MutationObserver</p>
+<p><font style="color: red">任务优先级</font>: process.nextTick &gt; promise.then&gt; setTimeout&gt;setImmediate</p>
+<p>即：微任务跟在当前的宏任务 之后，即，但其宏任务执行完成，立刻 开始执行微任务，然后再是下一个宏任务</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">setTimeOut(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;，<span class="number">0</span> )</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>（<span class="function"><span class="keyword">function</span>（<span class="title">res</span>,<span class="title">rej</span>）</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">    res()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">5</span>)</span><br><span class="line">&#125; ）.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">6</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//打印顺序:1,3,5,6,2</span></span><br><span class="line"><span class="comment">//1,3,5 第一个宏任务 在script里面</span></span><br><span class="line"><span class="comment">//6微任务跟在宏任务之后</span></span><br><span class="line"><span class="comment">//2 第二个宏任务，</span></span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -340,10 +436,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-07-31 18:46:27 / 修改时间：19:51:57" itemprop="dateCreated datePublished" datetime="2020-07-31T18:46:27+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 18:46:27" itemprop="dateCreated datePublished" datetime="2020-07-31T18:46:27+08:00">2020-07-31</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-18 10:18:56" itemprop="dateModified" datetime="2020-08-18T10:18:56+08:00">2020-08-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -401,6 +503,11 @@
 <p>三、替换方法</p>
 <p>语法:array.splice(starti,n,值1，值2);<br>原理和插入的用法相同<br>实际是就是：在starti的位置删除n个元素，然后在这个位置插入值1，值2,就可以起到替换<br>原来被删除的值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let a &#x3D; [1,2,3];</span><br><span class="line">a.splice (1,2,89,4); &#x2F;&#x2F; a为[1,89,4],返回取代的元素</span><br></pre></td></tr></table></figure>
+
+<p>四: 使用fill的弊端</p>
+<p>使用fill来填充数组，<font style="color: red">数组里面的每一个元素使用的是同一个地址,所以修改一个地址值会导致其他的全部修改</font></p>
+<p>例如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">3</span>).fill(<span class="number">-1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(arr); <span class="comment">//[-1,-1,-1]</span></span><br><span class="line">arr[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">console</span>.log(arr); <span class="comment">//[0,0,0];</span></span><br><span class="line"><span class="comment">//原因使用fill填充的数组内部是同一个地址值</span></span><br></pre></td></tr></table></figure>
 
 
       
@@ -983,7 +1090,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -996,7 +1103,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
