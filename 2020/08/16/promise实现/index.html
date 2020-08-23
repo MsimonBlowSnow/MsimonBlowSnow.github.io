@@ -28,7 +28,7 @@
 <meta property="og:description" content="promise实现1.实现的基本思路:​    1.定义一个class,类里面有两个队列,一个保存成功的响应队列函数,一个保存失败队列的函数，并将status初始化为pedding状态 ​    2.在类中定义两个方法一个是 resolve,和reject两个方法，这两个方法修改状态，并将遍历成功或者是失败的相关函数（这里的函数由我外部的 promise.then,或者promise.catch传">
 <meta property="og:image" content="http://msimonblowsnow.github.io/2020/08/16/promise%E5%AE%9E%E7%8E%B0/1.png">
 <meta property="article:published_time" content="2020-08-16T03:18:17.000Z">
-<meta property="article:modified_time" content="2020-08-19T11:47:13.152Z">
+<meta property="article:modified_time" content="2020-08-23T06:11:03.593Z">
 <meta property="article:author" content="朱福贵">
 <meta property="article:tag" content="promise实现">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-19 19:47:13" itemprop="dateModified" datetime="2020-08-19T19:47:13+08:00">2020-08-19</time>
+                <time title="修改时间：2020-08-23 14:11:03" itemprop="dateModified" datetime="2020-08-23T14:11:03+08:00">2020-08-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,13 +236,18 @@
 
 <h3 id="测试代码实现部分"><a href="#测试代码实现部分" class="headerlink" title="测试代码实现部分"></a>测试代码实现部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用自定义函数处理异步任务</span></span><br><span class="line">	 <span class="keyword">var</span> p1 = <span class="keyword">new</span> myPromise(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!<span class="literal">true</span>)&#123;</span><br><span class="line">                    resolve(<span class="string">"自定以的promise成功"</span>)</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    reject(<span class="string">'自定以的promise失败'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,<span class="number">1000</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">     	<span class="comment">//注册成功处理函数</span></span><br><span class="line">        p1.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;) </span><br><span class="line">		<span class="comment">//注册失败处理函数</span></span><br><span class="line">        p1.catch(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res);</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
 
-<p>代码结果如下:</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><pre><code>1. promise是实现是先把要处理的事件预先注册到自己定义的成功或失败的事件队列中,等里面的异步代码处理完成在，执行。
+
+2.promise的实现与事件管理机制同出一辙，可以说，上面promise的实现，与下面的代码是一样的</code></pre><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">"1.txt"</span>, (err, data) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        fileEvent.$emit(<span class="string">"fileEventFinish"</span>, data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> fileEvent = &#123;</span><br><span class="line">    events:[],</span><br><span class="line">    on: <span class="function">(<span class="params">event, fn</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.events[event]) &#123;</span><br><span class="line">            <span class="keyword">this</span>.events[event] = [];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.events[event].push(fn);</span><br><span class="line">    &#125;,</span><br><span class="line">    $emit: <span class="function">(<span class="params">(event, data</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.events[event])&#123;</span><br><span class="line">            <span class="keyword">this</span>.events[event].forEach(<span class="function">(<span class="params">item</span>)=&gt;</span>&#123;</span><br><span class="line">                item(data);</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">fileEvent.on(<span class="string">"fileEventFinish"</span>,(data)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data+<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line">fileEvent.on(<span class="string">"fileEventFinish"</span>,(data)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data+<span class="number">2</span>);</span><br><span class="line">&#125;)</span><br><span class="line">fileEvent.on(<span class="string">"fileEventFinish"</span>,(data)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data+<span class="number">3</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="事件管理机制"><a href="#事件管理机制" class="headerlink" title="事件管理机制"></a>事件管理机制</h3><p>代码结果如下:</p>
 <p>​    <img src="/2020/08/16/promise%E5%AE%9E%E7%8E%B0/1.png" alt></p>
 <h2 id="promise-与setTimeout"><a href="#promise-与setTimeout" class="headerlink" title="promise 与setTimeout"></a>promise 与setTimeout</h2><p><font style="color: red">宏任务</font>： script(整体代码)，setTimeout, setInterval,setImmediate,I/O,UI rendering</p>
 <p><font style="color: red">微任务</font>：promise(异步代码),Object.observe,MutationObserver</p>
 <p><font style="color: red">任务优先级</font>: process.nextTick &gt; promise.then&gt; setTimeout&gt;setImmediate</p>
 <p>即：微任务跟在当前的宏任务 之后，即，但其宏任务执行完成，立刻 开始执行微任务，然后再是下一个宏任务</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">setTimeOut(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;，<span class="number">0</span> )</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>（<span class="function"><span class="keyword">function</span>（<span class="title">res</span>,<span class="title">rej</span>）</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">    res()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">5</span>)</span><br><span class="line">&#125; ）.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">6</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//打印顺序:1,3,5,6,2</span></span><br><span class="line"><span class="comment">//1,3,5 第一个宏任务 在script里面</span></span><br><span class="line"><span class="comment">//6微任务跟在宏任务之后</span></span><br><span class="line"><span class="comment">//2 第二个宏任务，</span></span><br></pre></td></tr></table></figure>
+
+
 
 
     </div>
@@ -262,8 +267,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/08/03/git%E4%BD%BF%E7%94%A8/" rel="prev" title="git使用">
-      <i class="fa fa-chevron-left"></i> git使用
+    <a href="/2020/07/31/js%E6%95%B0%E7%BB%84/" rel="prev" title="js数组问题">
+      <i class="fa fa-chevron-left"></i> js数组问题
     </a></div>
       <div class="post-nav-item">
     <a href="/2020/08/17/js%E5%8C%85%E8%A3%85%E7%B1%BB/" rel="next" title="js包装类">
@@ -327,7 +332,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#promise实现"><span class="nav-number">1.</span> <span class="nav-text">promise实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实现的基本思路"><span class="nav-number">1.1.</span> <span class="nav-text">1.实现的基本思路:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-自定义promise的执行过程"><span class="nav-number">1.2.</span> <span class="nav-text">2.自定义promise的执行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-代码-实现部分"><span class="nav-number">1.3.</span> <span class="nav-text">3 代码 实现部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码实现部分"><span class="nav-number">1.4.</span> <span class="nav-text">测试代码实现部分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#promise-与setTimeout"><span class="nav-number">2.</span> <span class="nav-text">promise 与setTimeout</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#promise实现"><span class="nav-number">1.</span> <span class="nav-text">promise实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实现的基本思路"><span class="nav-number">1.1.</span> <span class="nav-text">1.实现的基本思路:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-自定义promise的执行过程"><span class="nav-number">1.2.</span> <span class="nav-text">2.自定义promise的执行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-代码-实现部分"><span class="nav-number">1.3.</span> <span class="nav-text">3 代码 实现部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码实现部分"><span class="nav-number">1.4.</span> <span class="nav-text">测试代码实现部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">1.5.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件管理机制"><span class="nav-number">1.6.</span> <span class="nav-text">事件管理机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#promise-与setTimeout"><span class="nav-number">2.</span> <span class="nav-text">promise 与setTimeout</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -343,14 +348,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
